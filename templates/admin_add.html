@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="h4 fw-bold mb-3">Add Event (Admin)</h1>
-<form method="post" onsubmit="return serializeDynamicFields()" class="card card-body border-0 shadow-sm">
-  {% include '_event_form_fields.html' %}
-</form>
+  <h3 class="text-xl font-semibold mb-4">Add Event (Admin)</h3>
+  <form method="post" onsubmit="return collectAndSubmit(this)"
+        class="rounded-xl border border-white/10 bg-gray-900/60 p-5 shadow-xl space-y-4">
+    {% include '_event_form_fields.html' %}
+    <div class="text-right">
+      <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-500">
+        Add Event
+      </button>
+    </div>
+  </form>
 {% endblock %}

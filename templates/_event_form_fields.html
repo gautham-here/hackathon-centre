@@ -1,110 +1,303 @@
-<div class="vstack gap-3">
+<div class="space-y-6">
+
+  <!-- Basics -->
+  <section class="rounded-xl border border-white/10 bg-gray-900/60 p-4 shadow">
+    <h3 class="text-indigo-400 font-semibold mb-4">📌 Basics</h3>
+
+    <div class="grid grid-cols-1 gap-4">
+      <div>
+        <label for="title" class="block text-sm text-gray-300 mb-1">Title <span class="text-red-400">*</span></label>
+        <input id="title" name="title" required
+               class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               value="{{ event.title if event else '' }}" placeholder="Hackathon Title" />
+      </div>
+
+<!-- Start/End with "not yet decided" -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
   <div>
-    <label class="form-label">Title *</label>
-    <input name="title" class="form-control" required />
-  </div>
-  <div class="row g-3">
-    <div class="col-md-4">
-      <label class="form-label">Start (date & time)</label>
-      <input type="datetime-local" name="start_dt" class="form-control" />
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">End (date & time)</label>
-      <input type="datetime-local" name="end_dt" class="form-control" />
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Registration deadline</label>
-      <input type="datetime-local" name="reg_deadline" class="form-control" />
-    </div>
-  </div>
-
-  <div class="row g-3">
-    <div class="col-md-4">
-      <label class="form-label">Team size (min)</label>
-      <input name="team_min" type="number" min="0" class="form-control" />
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Team size (max)</label>
-      <input name="team_max" type="number" min="0" class="form-control" />
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Mode</label>
-      <select name="mode" class="form-select">
-        <option value="">Select</option>
-        <option value="online">Online</option>
-        <option value="offline">Offline</option>
-        <option value="hybrid">Hybrid</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row g-3">
-    <div class="col-md-4">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="intercollege" id="ic">
-        <label class="form-check-label" for="ic">Intercollege allowed</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="interdepartment" id="idp">
-        <label class="form-check-label" for="idp">Interdepartment allowed</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="interyear" id="iy">
-        <label class="form-check-label" for="iy">Interyear allowed</label>
-      </div>
-    </div>
-    <div class="col-md-8">
-      <label class="form-label">Venue (if offline)</label>
-      <input name="venue" class="form-control" placeholder="e.g., Main Seminar Hall" />
-    </div>
+    <label for="start_dt_date" class="block text-sm text-gray-300 mb-1">
+      Start Date <span class="text-red-400">*</span>
+    </label>
+    <input id="start_dt_date" type="date" name="start_dt_date"
+           placeholder="dd/mm/yyyy"
+           class="date-input w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+           value="{{ event.start_dt.date() if event and event.start_dt else '' }}" />
+    <input id="start_dt_time" type="time" name="start_dt_time"
+           placeholder="hh:mm (optional)"
+           class="time-input mt-2 w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+           value="{{ event.start_dt.time() if event and event.start_dt else '' }}" />
   </div>
 
   <div>
-    <label class="form-label">Overall description</label>
-    <textarea name="description" class="form-control" rows="4"></textarea>
+    <label for="end_dt_date" class="block text-sm text-gray-300 mb-1">
+      End Date <span class="text-red-400">*</span>
+    </label>
+    <input id="end_dt_date" type="date" name="end_dt_date"
+           placeholder="dd/mm/yyyy"
+           class="date-input w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+           value="{{ event.end_dt.date() if event and event.end_dt else '' }}" />
+    <input id="end_dt_time" type="time" name="end_dt_time"
+           placeholder="hh:mm (optional)"
+           class="time-input mt-2 w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+           value="{{ event.end_dt.time() if event and event.end_dt else '' }}" />
   </div>
 
-  <div class="card card-body border-dashed">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="fw-semibold">Rounds</div>
-      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addRound()">Add round</button>
+  <div class="flex items-center space-x-2">
+    <input type="checkbox" id="not-decided" class="h-4 w-4 text-indigo-500 border-gray-600 rounded">
+    <label for="not-decided" class="text-sm text-gray-300">Not yet decided</label>
+  </div>
+</div>
+
+<script>
+  // Handle "Not yet decided"
+  const notDecided = document.getElementById("not-decided");
+  const startInputs = [document.getElementById("start_dt_date"), document.getElementById("start_dt_time")];
+  const endInputs = [document.getElementById("end_dt_date"), document.getElementById("end_dt_time")];
+
+  notDecided.addEventListener("change", () => {
+    if (notDecided.checked) {
+      [...startInputs, ...endInputs].forEach(input => {
+        input.disabled = true;
+        input.value = ""; // clear
+      });
+    } else {
+      [...startInputs, ...endInputs].forEach(input => input.disabled = false);
+    }
+  });
+</script>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="fee" class="block text-sm text-gray-300 mb-1">Fee</label>
+          <input id="fee" name="fee"
+                 class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 placeholder="Free / ₹500 / TBA" value="{{ event.fee if event else '' }}" />
+        </div>
+        <div>
+          <label for="prize" class="block text-sm text-gray-300 mb-1">Prize</label>
+          <input id="prize" name="prize"
+                 class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 placeholder="₹50,000 / TBA" value="{{ event.prize if event else '' }}" />
+        </div>
+      </div>
+
+      <div>
+        <label for="description" class="block text-sm text-gray-300 mb-1">Description</label>
+        <textarea id="description" name="description" rows="3"
+                  class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Brief description of the hackathon">{{ event.description if event else '' }}</textarea>
+      </div>
     </div>
-    <div id="rounds-container" class="vstack gap-2"></div>
-  </div>
+  </section>
 
-  <div class="card card-body border-dashed">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="fw-semibold">Level descriptions (optional)</div>
-      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addLevel()">Add level</button>
+  <!-- Team & Mode -->
+  <section class="rounded-xl border border-white/10 bg-gray-900/60 p-4 shadow">
+    <h3 class="text-indigo-400 font-semibold mb-4">👥 Team & Mode</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label for="team_min" class="block text-sm text-gray-300 mb-1">Team min</label>
+        <input id="team_min" name="team_min" type="number" min="0"
+               class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label for="team_max" class="block text-sm text-gray-300 mb-1">Team max</label>
+        <input id="team_max" name="team_max" type="number" min="0"
+               class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div class="md:col-span-2 flex items-center space-x-2">
+        <input type="checkbox" id="team-not-fixed" class="h-4 w-4 text-indigo-500 border-gray-600 rounded">
+        <label for="team-not-fixed" class="text-sm text-gray-300">Team size not fixed</label>
+      </div>
     </div>
-    <div id="levels-container" class="vstack gap-2"></div>
-  </div>
 
-  <div class="card card-body border-dashed">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="fw-semibold">Extra fields (flexible)</div>
-      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addExtra()">Add field</button>
+    <!-- Eligibility moved here -->
+    <div class="mt-4">
+      <label for="eligibility" class="block text-sm text-gray-300 mb-1">Eligibility</label>
+      <textarea id="eligibility" name="eligibility" rows="2"
+                class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Example: Open to all UG students">{{ event.eligibility if event else '' }}</textarea>
     </div>
-    <div id="extra-container" class="vstack gap-2"></div>
-  </div>
 
-  <div class="row g-3">
-    <div class="col-md-6">
-      <label class="form-label">Sponsor (if any)</label>
-      <input name="sponsor" class="form-control" />
+    <!-- mode/venue/accommodation remain same... -->
+  </section>
+
+  <!-- Domains & Problems -->
+  <section class="rounded-xl border border-white/10 bg-gray-900/60 p-4 shadow">
+    <h3 class="text-indigo-400 font-semibold mb-4">🧩 Domains & Problem Statements</h3>
+
+    <!-- Domain dropdown with tags -->
+    <div>
+      <label class="block text-sm text-gray-300 mb-1">Domains</label>
+      <div class="relative inline-block">
+        <button id="domains-btn" type="button"
+                class="px-3 py-2 rounded-lg bg-gray-900/60 border border-white/10 text-gray-100 text-sm">
+          Select Domains
+        </button>
+        <div id="domains-menu" class="absolute mt-1 hidden w-48 rounded-lg border border-white/10 bg-gray-800/95 shadow-lg z-10">
+          {% for d in DOMAINS %}
+          <div class="px-3 py-2 cursor-pointer hover:bg-gray-700 text-sm text-gray-200 domain-option" data-value="{{ d }}">{{ d }}</div>
+          {% endfor %}
+          <div class="px-3 py-2 cursor-pointer hover:bg-gray-700 text-sm text-gray-200 domain-option" data-value="Other">Other</div>
+        </div>
+      </div>
+      <div id="selected-domains" class="mt-2 flex flex-wrap gap-2"></div>
+      <input type="hidden" name="domains_json" id="domains_json" />
     </div>
-    <div class="col-md-6">
-      <label class="form-label">Organizer</label>
-      <input name="organizer" class="form-control" />
+
+    <!-- Problems remain -->
+    <div class="mt-4 rounded-lg border border-white/10 bg-gray-900/40 p-3">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-sm text-gray-300 font-medium">Problem statements</div>
+        <button type="button" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-500"
+                onclick="addProblem()">Add</button>
+      </div>
+      <div id="problems-container" class="space-y-2"></div>
+      <input type="hidden" name="problems_json" id="problems_json" />
     </div>
-  </div>
+  </section>
 
-  <!-- Hidden JSON fields populated by JS before submit -->
-  <input type="hidden" name="rounds_json" id="rounds_json" />
-  <input type="hidden" name="levels_json" id="levels_json" />
-  <input type="hidden" name="extra_json" id="extra_json" />
+  <!-- Additional Details -->
+  <section class="rounded-xl border border-white/10 bg-gray-900/60 p-4 shadow">
+    <h3 class="text-indigo-400 font-semibold mb-4">ℹ️ Additional Details</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="sponsor" class="block text-sm text-gray-300 mb-1">Sponsor</label>
+          <input id="sponsor" name="sponsor"
+                 class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 value="{{ event.sponsor if event else '' }}" />
+        </div>
+        <div>
+          <label for="organizer" class="block text-sm text-gray-300 mb-1">Organizer</label>
+          <input id="organizer" name="organizer"
+                 class="w-full rounded-lg bg-gray-900/60 border border-white/10 px-3 py-2 text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 value="{{ event.organizer if event else '' }}" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-300 mb-1">Extra fields</label>
+        <div id="extra-container" class="space-y-2"></div>
+        <input type="hidden" name="extra_json" id="extra_json" />
+        <div class="mt-2">
+          <button type="button" id="extra-btn"
+                  class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-500">Add extra field</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="text-end">
-    <button class="btn btn-primary px-4" onclick="serializeDynamicFields()">Submit</button>
-  </div>
+  <!-- Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const eventData = {{ (event|tojson) if event else 'null' }};
+
+      // --- Start/End toggle ---
+      const notDecided = document.getElementById('not-decided');
+      const start = document.getElementById('start_dt');
+      const end = document.getElementById('end_dt');
+      notDecided.addEventListener('change', () => {
+        [start, end].forEach(i => i.disabled = notDecided.checked);
+      });
+
+      // --- Registration toggle ---
+      const notOpened = document.getElementById('not-opened');
+      const regDeadline = document.getElementById('reg_deadline');
+      const opensOn = document.getElementById('opens-on-container');
+      const toBeAnnounced = document.getElementById('to-be-announced');
+      notOpened.addEventListener('change', () => {
+        regDeadline.disabled = notOpened.checked;
+        opensOn.classList.toggle('hidden', !notOpened.checked);
+      });
+      toBeAnnounced.addEventListener('change', () => {
+        document.getElementById('opens-on').disabled = toBeAnnounced.checked;
+      });
+
+      // --- Team not fixed toggle ---
+      const teamNotFixed = document.getElementById('team-not-fixed');
+      const teamMin = document.getElementById('team_min');
+      const teamMax = document.getElementById('team_max');
+      teamNotFixed.addEventListener('change', () => {
+        teamMin.disabled = teamMax.disabled = teamNotFixed.checked;
+      });
+
+      // --- Domains dropdown with tags ---
+      const domainsBtn = document.getElementById('domains-btn');
+      const domainsMenu = document.getElementById('domains-menu');
+      const selectedWrap = document.getElementById('selected-domains');
+      const hiddenDomains = document.getElementById('domains_json');
+      let selected = [];
+
+      domainsBtn.addEventListener('click', () => {
+        domainsMenu.classList.toggle('hidden');
+      });
+      document.querySelectorAll('.domain-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const val = opt.dataset.value;
+          if (!selected.includes(val)) selected.push(val);
+          renderTags();
+          domainsMenu.classList.add('hidden');
+        });
+      });
+
+      function renderTags() {
+        selectedWrap.innerHTML = '';
+        selected.forEach(val => {
+          const tag = document.createElement('span');
+          tag.className = 'inline-flex items-center px-2 py-1 rounded-full bg-indigo-500 text-white text-xs';
+          tag.innerHTML = `${val} <button type="button" class="ml-1 text-white hover:text-gray-200">✕</button>`;
+          tag.querySelector('button').addEventListener('click', () => {
+            selected = selected.filter(x => x !== val);
+            renderTags();
+          });
+          selectedWrap.appendChild(tag);
+        });
+        hiddenDomains.value = JSON.stringify(selected);
+      }
+
+      // --- Extra fields ---
+      const extraBtn = document.getElementById('extra-btn');
+      const extraContainer = document.getElementById('extra-container');
+      const extraHidden = document.getElementById('extra_json');
+      let extra = {};
+      extraBtn.addEventListener('click', () => addExtra());
+
+      function addExtra(k = '', v = '') {
+        const row = document.createElement('div');
+        row.className = 'flex gap-2';
+        row.innerHTML = `
+          <input class="flex-1 rounded-lg bg-gray-900/60 border border-white/10 px-3 py-1.5 text-gray-100"
+                 placeholder="Field" value="${k}">
+          <input class="flex-1 rounded-lg bg-gray-900/60 border border-white/10 px-3 py-1.5 text-gray-100"
+                 placeholder="Value" value="${v}">
+          <button type="button" class="px-2 rounded bg-red-600 text-white">✕</button>`;
+        row.querySelector('button').addEventListener('click', () => {
+          row.remove();
+          saveExtra();
+        });
+        row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', saveExtra));
+        extraContainer.appendChild(row);
+        saveExtra();
+      }
+      function saveExtra() {
+        extra = {};
+        extraContainer.querySelectorAll('div').forEach(row => {
+          const [k, v] = row.querySelectorAll('input');
+          if (k.value.trim()) extra[k.value] = v.value;
+        });
+        extraHidden.value = JSON.stringify(extra);
+      }
+
+      // --- Prefill from eventData ---
+      if (eventData) {
+        if (eventData.domains) {
+          selected = eventData.domains;
+          renderTags();
+        }
+        if (eventData.extra) {
+          for (const k in eventData.extra) addExtra(k, eventData.extra[k]);
+        }
+      }
+    });
+  </script>
 </div>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex gap-6">
+  <!-- Sidebar Filters -->
+  <div class="w-1/4 bg-gray-900/80 backdrop-blur-lg p-5 rounded-xl shadow-lg h-fit" data-aos="fade-right">
+    <h3 class="text-lg font-bold mb-4 text-indigo-400">Filters</h3>
+    <form method="get" action="{{ url_for('home') }}" class="space-y-4">
+      <label class="block">
+        <span class="text-sm text-gray-400">Mode</span>
+        <select name="mode" class="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:ring-2 focus:ring-indigo-500">
+          <option value="">All</option>
+          <option value="online" {{ 'selected' if query and query.get('mode') == 'online' else '' }}>Online</option>
+          <option value="offline" {{ 'selected' if query and query.get('mode') == 'offline' else '' }}>Offline</option>
+          <option value="hybrid" {{ 'selected' if query and query.get('mode') == 'hybrid' else '' }}>Hybrid</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="text-sm text-gray-400">Registration</span>
+        <select name="reg_status" class="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:ring-2 focus:ring-indigo-500">
+          <option value="">Any</option>
+          <option value="open" {{ 'selected' if query and query.get('reg_status') == 'open' else '' }}>Open</option>
+          <option value="closed" {{ 'selected' if query and query.get('reg_status') == 'closed' else '' }}>Closed</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="text-sm text-gray-400">Sort By</span>
+        <select name="sort" class="w-full bg-gray-800 border border-gray-700 rounded p-2 focus:ring-2 focus:ring-indigo-500">
+          <option value="">Default</option>
+          <option value="prize" {{ 'selected' if query and query.get('sort') == 'prize' else '' }}>Prize Amount</option>
+          <option value="fee" {{ 'selected' if query and query.get('sort') == 'fee' else '' }}>Registration Fee</option>
+          <option value="deadline" {{ 'selected' if query and query.get('sort') == 'deadline' else '' }}>Deadline</option>
+          <option value="start" {{ 'selected' if query and query.get('sort') == 'start' else '' }}>Start Date</option>
+        </select>
+      </label>
+      <button type="submit"
+        class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded-lg font-semibold transition transform hover:scale-105">
+        Apply
+      </button>
+    </form>
+  </div>
+
+  <!-- Events Section -->
+  <div class="w-3/4">
+    {% if events %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for event in events %}
+        <div class="bg-gray-900/80 backdrop-blur-lg p-5 rounded-xl shadow-lg hover:shadow-indigo-700/50 transition transform hover:-translate-y-1"
+             data-aos="zoom-in">
+          <h2 class="text-xl font-bold mb-2 text-white">{{ event.title }}</h2>
+          <p class="text-sm text-gray-400 mb-2">
+            {{ event.start_dt }}{% if event.end_dt %} – {{ event.end_dt }}{% endif %}
+          </p>
+          <p class="text-gray-300 line-clamp-3">{{ event.description }}</p>
+          <div class="flex justify-between items-center mt-3 text-sm">
+            <span class="text-indigo-400">👍 {{ event.upvotes }}</span>
+            <a href="#" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded-lg transition transform hover:scale-105">
+              Details
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-gray-400 p-6" data-aos="fade-up">
+        <h2 class="text-xl font-bold">🚫 No events available</h2>
+        <p>Check back later for new events!</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
