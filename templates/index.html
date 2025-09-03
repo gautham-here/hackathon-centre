@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="display-6 fw-bold mb-3">Discover Hackathons & Events</h1>
+<form method="get" class="row g-2 align-items-end mb-4 card card-body border-0 shadow-sm">
+  <div class="col-md-4">
+    <label class="form-label">Search</label>
+    <input type="text" name="q" class="form-control" value="{{ query.q }}" placeholder="Title, organizer, description..." />
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Mode</label>
+    <select name="mode" class="form-select">
+      <option value="">Any</option>
+      <option value="online" {{ 'selected' if query.mode=='online' else '' }}>Online</option>
+      <option value="offline" {{ 'selected' if query.mode=='offline' else '' }}>Offline</option>
+      <option value="hybrid" {{ 'selected' if query.mode=='hybrid' else '' }}>Hybrid</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Intercollege</label>
+    <select name="intercollege" class="form-select">
+      <option value="">Any</option>
+      <option value="yes" {{ 'selected' if query.intercollege=='yes' else '' }}>Yes</option>
+      <option value="no" {{ 'selected' if query.intercollege=='no' else '' }}>No</option>
+    </select>
+  </div>
+  <div class="col-md-3 text-md-end">
+    <label class="form-label">Date range</label>
+    <div class="d-flex gap-2">
+      <input type="datetime-local" name="from" class="form-control" value="{{ query['from'] }}">
+      <input type="datetime-local" name="to" class="form-control" value="{{ query['to'] }}">
+    </div>
+  </div>
+  <div class="col-12 text-end">
+    <button class="btn btn-primary px-4">Apply</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Reset</a>
+  </div>
+</form>
+
+{% if events|length == 0 %}
+  <div class="alert alert-warning shadow-sm">No events found. Try adjusting filters.</div>
+{% endif %}
+
+<div class="vstack gap-3">
+  {% for e in events %}
+    <div class="card border-0 shadow-sm hover-lift">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h5 class="mb-1">{{ e.title }}</h5>
+            <div class="text-muted small">{{ e.start_dt }} → {{ e.end_dt }} · {{ e.mode|capitalize }} {% if e.venue %} · {{ e.venue }}{% endif %}</div>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#ev{{ e.id }}">Details</button>
+        </div>
+        <div id="ev{{ e.id }}" class="collapse mt-3">
+          <p class="mb-2">{{ e.description }}</p>
+          <div class="row g-2 small">
+            <div class="col-md-3"><span class="text-muted">Registration deadline:</span> {{ e.reg_deadline or '—' }}</div>
+            <div class="col-md-3"><span class="text-muted">Team size:</span> {{ e.team_min or '?' }}–{{ e.team_max or '?' }}</div>
+            <div class="col-md-3"><span class="text-muted">Intercollege:</span> {{ 'Yes' if e.intercollege else 'No' }}</div>
+            <div class="col-md-3"><span class="text-muted">Inter-dept / Inter-year:</span> {{ 'Yes' if e.interdepartment else 'No' }} / {{ 'Yes' if e.interyear else 'No' }}</div>
+            {% if e.sponsor %}<div class="col-md-3"><span class="text-muted">Sponsor:</span> {{ e.sponsor }}</div>{% endif %}
+            {% if e.organizer %}<div class="col-md-3"><span class="text-muted">Organizer:</span> {{ e.organizer }}</div>{% endif %}
+          </div>
+
+          {% if e.rounds and e.rounds|length %}
+          <hr>
+          <div class="fw-semibold mb-2">Rounds</div>
+          <ul class="list-group list-group-flush">
+            {% for r in e.rounds %}
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <div class="fw-semibold">{{ r.name or 'Round ' ~ loop.index }}</div>
+                    <div class="small text-muted">{{ r.date }} {{ r.time }} {% if r.venue %} · {{ r.venue }}{% endif %}</div>
+                  </div>
+                  {% if r.desc %}<div class="small">{{ r.desc }}</div>{% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          {% if e.extra and e.extra|length %}
+          <hr>
+          <div class="row g-2">
+            {% for k,v in e.extra.items() %}
+              <div class="col-md-3"><span class="text-muted small">{{ k }}:</span> {{ v }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

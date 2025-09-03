@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 fw-bold mb-3">Suggest an Event</h1>
+<div class="alert alert-info">Your submission will be queued for admin review. It won’t appear publicly until approved.</div>
+<form method="post" onsubmit="return serializeDynamicFields()" class="card card-body border-0 shadow-sm">
+  {% include '_event_form_fields.html' %}
+</form>
+{% endblock %}

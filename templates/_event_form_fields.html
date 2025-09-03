@@ -1,0 +1,110 @@
+<div class="vstack gap-3">
+  <div>
+    <label class="form-label">Title *</label>
+    <input name="title" class="form-control" required />
+  </div>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Start (date & time)</label>
+      <input type="datetime-local" name="start_dt" class="form-control" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">End (date & time)</label>
+      <input type="datetime-local" name="end_dt" class="form-control" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Registration deadline</label>
+      <input type="datetime-local" name="reg_deadline" class="form-control" />
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Team size (min)</label>
+      <input name="team_min" type="number" min="0" class="form-control" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Team size (max)</label>
+      <input name="team_max" type="number" min="0" class="form-control" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Mode</label>
+      <select name="mode" class="form-select">
+        <option value="">Select</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="hybrid">Hybrid</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="intercollege" id="ic">
+        <label class="form-check-label" for="ic">Intercollege allowed</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="interdepartment" id="idp">
+        <label class="form-check-label" for="idp">Interdepartment allowed</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="interyear" id="iy">
+        <label class="form-check-label" for="iy">Interyear allowed</label>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <label class="form-label">Venue (if offline)</label>
+      <input name="venue" class="form-control" placeholder="e.g., Main Seminar Hall" />
+    </div>
+  </div>
+
+  <div>
+    <label class="form-label">Overall description</label>
+    <textarea name="description" class="form-control" rows="4"></textarea>
+  </div>
+
+  <div class="card card-body border-dashed">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="fw-semibold">Rounds</div>
+      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addRound()">Add round</button>
+    </div>
+    <div id="rounds-container" class="vstack gap-2"></div>
+  </div>
+
+  <div class="card card-body border-dashed">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="fw-semibold">Level descriptions (optional)</div>
+      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addLevel()">Add level</button>
+    </div>
+    <div id="levels-container" class="vstack gap-2"></div>
+  </div>
+
+  <div class="card card-body border-dashed">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="fw-semibold">Extra fields (flexible)</div>
+      <button class="btn btn-sm btn-outline-primary" type="button" onclick="addExtra()">Add field</button>
+    </div>
+    <div id="extra-container" class="vstack gap-2"></div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Sponsor (if any)</label>
+      <input name="sponsor" class="form-control" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Organizer</label>
+      <input name="organizer" class="form-control" />
+    </div>
+  </div>
+
+  <!-- Hidden JSON fields populated by JS before submit -->
+  <input type="hidden" name="rounds_json" id="rounds_json" />
+  <input type="hidden" name="levels_json" id="levels_json" />
+  <input type="hidden" name="extra_json" id="extra_json" />
+
+  <div class="text-end">
+    <button class="btn btn-primary px-4" onclick="serializeDynamicFields()">Submit</button>
+  </div>
+</div>
