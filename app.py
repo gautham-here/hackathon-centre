@@ -352,6 +352,39 @@ def reject(event_id):
     flash('Event rejected & removed.', 'warning')
     return redirect(url_for('review'))
 
+@app.route("/event/<int:event_id>")
+def event_detail(event_id):
+    event = Event.query.get_or_404(event_id)
+    return render_template("event_detail.html", event=event)
+
+@app.route("/event/<int:event_id>/upvote", methods=["POST"])
+def upvote_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    # toggle vote logic depending on session user
+    # (example logic, you may need a Vote table if multiple users vote)
+    if session.get("voted") == event_id:
+        event.upvotes -= 1
+        session.pop("voted")
+    else:
+        event.upvotes += 1
+        session["voted"] = event_id
+    db.session.commit()
+    return {"upvotes": event.upvotes}
+
+@app.route("/review")
+def review():
+    events = Event.query.filter_by(approved=False).all()
+    return render_template("review.html", events=events)
+
+@app.route("/review/<int:event_id>/approve", methods=["POST"])
+def approve_event(event_id):
+    if not session.get("admin"):
+        abort(403)
+    event = Event.query.get_or_404(event_id)
+    event.approved = True
+    db.session.commit()
+    flash("Event approved!", "success")
+    return redirect(url_for("review"))
 
 # ---------- Helpers ----------
 def _parse_event_form(req):
