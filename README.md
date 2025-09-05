@@ -1,7 +1,7 @@
 # hackathon-centre
 
 # College & External Events Aggregator
-A clean, fast, Flask-based site that lists hackathons/events with rich filters. Admin can log in to add events. Users can submit suggestions (stored as pending) for admin review/approval.
+A clean, fast, real-time site that lists hackathons/events with rich filters. Admin can log in to add events. Users can submit suggestions (stored as pending) for admin review/approval.
 
 
 ## Features
